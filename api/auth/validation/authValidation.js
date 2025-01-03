@@ -14,6 +14,7 @@ const createSchoolSchema = Joi.object({
   adminName: Joi.string().required(),
   adminEmail: Joi.string().email().required(),
   adminPassword: Joi.string().min(6).required(),
+  adminRole: Joi.string().valid('mainAdmin', 'admin').required(),
 });
 
 const updateSchoolSchema = Joi.object({
@@ -34,6 +35,7 @@ const updateSchoolSchema = Joi.object({
   adminName: Joi.string().optional(),
   adminEmail: Joi.string().email().optional(),
   adminPassword: Joi.string().min(6).optional(),
+  adminRole: Joi.string().valid('mainAdmin', 'admin').optional(),
 });
 
 const registerSchoolSchema = Joi.object({
@@ -43,6 +45,7 @@ const registerSchoolSchema = Joi.object({
   adminName: Joi.string().required(),
   adminEmail: Joi.string().email().required(),
   adminPassword: Joi.string().min(6).required(),
+  adminRole: Joi.string().valid('mainAdmin', 'admin').required(),
 });
 
 module.exports = { createSchoolSchema, updateSchoolSchema, registerSchoolSchema };

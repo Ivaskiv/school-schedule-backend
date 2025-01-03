@@ -20,6 +20,7 @@ authRouter.get('/school/:id', async (req, res) => {
     }
     res.json(school);
   } catch (error) {
+    console.error('Error fetching school:', error);
     res.status(500).json({ message: 'Error fetching school data', error: error.message });
   }
 });
@@ -32,6 +33,7 @@ authRouter.get('/admin/:id', async (req, res) => {
     }
     res.json(admin);
   } catch (error) {
+    console.error('Error fetching admin:', error);
     res.status(500).json({ message: 'Error fetching admin data', error: error.message });
   }
 });

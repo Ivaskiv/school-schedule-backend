@@ -15,17 +15,11 @@ const checkAdminExists = async email => {
 };
 
 const registerSchoolAndAdmin = async (req, res) => {
-  const {
-    schoolName,
-    schoolAddress,
-    schoolEmail,
-    adminName,
-    adminEmail,
-    adminPassword,
-    adminRole,
-  } = req.body;
+  const { schoolName, schoolAddress, schoolEmail, adminName, adminEmail, adminPassword } = req.body;
 
   try {
+    await checkAdminExists(adminEmail);
+
     const newSchool = new School({
       name: schoolName,
       address: schoolAddress,
@@ -33,12 +27,12 @@ const registerSchoolAndAdmin = async (req, res) => {
     });
     await newSchool.save();
 
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const hashedPassword = await hashPassword(adminPassword);
     const newAdmin = new Admin({
       name: adminName,
       email: adminEmail,
       password: hashedPassword,
-      role: 'mainAdmin',
+      role: req.body.adminRole || 'mainAdmin',
       school: newSchool._id,
     });
 
@@ -57,6 +51,7 @@ const registerSchoolAndAdmin = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 const loginAdmin = async (req, res) => {
   try {
     const { adminEmail, adminPassword } = req.body;
@@ -85,7 +80,7 @@ const loginAdmin = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.error(error);
+    console.error('Error logging in:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
