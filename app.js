@@ -21,7 +21,7 @@ if (!MONGODB_URL || !CLIENT_URL || !JWT_SECRET_KEY) {
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(async () => {
-    console.log(`Database connection successful... Server is started on the port ${PORT}`);
+    console.log(`Database connection successful`);
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);
@@ -32,13 +32,13 @@ if (NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: 'https://school-app-kglf.vercel.app',
     methods: 'GET, POST, PUT, DELETE',
     // credentials: true,
   })
