@@ -5,8 +5,9 @@ const schoolSchema = new mongoose.Schema({
   address: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   phone: { type: String, required: false },
-  mainAdmin: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  mainAdmin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
 });
+
 const School = mongoose.model('School', schoolSchema);
 
 const adminSchema = new mongoose.Schema({

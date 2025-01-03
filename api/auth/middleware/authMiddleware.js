@@ -16,25 +16,44 @@ const checkAdminExists = async email => {
 
 const registerSchoolAndAdmin = async (req, res) => {
   try {
-    const { schoolName, schoolAddress, adminName, adminEmail, adminPassword } = req.body;
+    const { schoolName, schoolAddress, schoolEmail, adminName, adminEmail, adminPassword } =
+      req.body;
 
-    if (!schoolName || !schoolAddress || !adminName || !adminEmail || !adminPassword) {
+    if (
+      !schoolName ||
+      !schoolAddress ||
+      !schoolEmail ||
+      !adminName ||
+      !adminEmail ||
+      !adminPassword
+    ) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
     await checkAdminExists(adminEmail);
 
-    const school = await School.create({ name: schoolName, address: schoolAddress });
+    const school = await School.create({
+      name: schoolName,
+      address: schoolAddress,
+      email: schoolEmail,
+    });
 
-    const hashedPassword = await hashPassword(adminPassword);
+    const hashedPassword = await hashPassword(adminPassword, 10);
 
     const admin = await Admin.create({
       name: adminName,
       email: adminEmail,
       password: hashedPassword,
+      role: 'admin',
       school: school._id,
     });
-
+    await school.save();
+    await admin.save();
+    const token = jwt.sign(
+      { id: admin._id, role: admin.role, school: school._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
     res.status(201).json({
       message: 'School and admin registered successfully',
       school,

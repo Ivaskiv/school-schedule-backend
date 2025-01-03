@@ -15,55 +15,48 @@ const checkAdminExists = async email => {
 };
 
 const registerSchoolAndAdmin = async (req, res) => {
+  const {
+    schoolName,
+    schoolAddress,
+    schoolEmail,
+    adminName,
+    adminEmail,
+    adminPassword,
+    adminRole,
+  } = req.body;
+
   try {
-    const { schoolName, schoolAddress, schoolEmail, adminName, adminEmail, adminPassword } =
-      req.body;
-
-    if (
-      !schoolName ||
-      !schoolAddress ||
-      !schoolEmail ||
-      !adminName ||
-      !adminEmail ||
-      !adminPassword
-    ) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    await checkAdminExists(adminEmail);
-
-    const school = await School.create({
+    const newSchool = new School({
       name: schoolName,
       address: schoolAddress,
       email: schoolEmail,
     });
+    await newSchool.save();
 
-    const hashedPassword = await hashPassword(adminPassword);
-
-    const admin = await Admin.create({
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
+    const newAdmin = new Admin({
       name: adminName,
       email: adminEmail,
       password: hashedPassword,
-      school: school._id,
+      role: 'mainAdmin',
+      school: newSchool._id,
     });
 
-    const token = jwt.sign({ id: admin._id, role: 'admin' }, process.env.JWT_SECRET_KEY, {
-      expiresIn: '10h',
-    });
+    await newAdmin.save();
+
+    newSchool.mainAdmin = newAdmin._id;
+    await newSchool.save();
 
     res.status(201).json({
-      message: 'School and main admin registered successfully',
-      school,
-      admin: { id: admin._id, name: admin.name, email: admin.email },
-      token,
+      message: 'School and Admin registered successfully!',
+      school: newSchool,
+      admin: newAdmin,
     });
   } catch (error) {
-    console.error('Error during registration:', error);
-    const statusCode = error.message === 'Admin with this email already exists' ? 409 : 500;
-    res.status(statusCode).json({ message: error.message || 'Internal server error' });
+    console.error('Error registering school and admin:', error);
+    res.status(500).json({ error: error.message });
   }
 };
-
 const loginAdmin = async (req, res) => {
   try {
     const { adminEmail, adminPassword } = req.body;
