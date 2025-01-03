@@ -9,8 +9,8 @@ const {
   createPupil,
   updatePupil,
 } = require('../controllers/pupilController');
-const { authMiddleware } = require('../../auth/middleware/authMiddleware');
-const { validateBody } = require('../../utils/validateBody');
+const { authMiddleware } = require('../../../auth/middleware/authMiddleware');
+const { validateBody } = require('../../../utils/validateBody');
 const { createPupilSchema, updatePupilSchema } = require('../../teachers/schemas/teacherSchemas');
 
 const pupilRoutes = express.Router();

@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
-const { School, Admin } = require('../models/authModels');
 const { User } = require('../models/userModels');
+const { School, Admin } = require('../../auth/models/authModels');
 
 const hashPassword = async password => {
   const salt = await bcrypt.genSalt(10);

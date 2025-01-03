@@ -1,7 +1,7 @@
 const Teacher = require('../models/teacherModel');
 const School = require('../../auth/models/authModels/schoolModel');
-const HttpError = require('../../utils/HttpError');
-const { errorWrapper } = require('../../utils/errorWrapper');
+const HttpError = require('../../../utils/HttpError');
+const { errorWrapper } = require('../../../utils/errorWrapper');
 
 const registerTeacher = async (req, res, next) => {
   const { name, email, password, school } = req.body;

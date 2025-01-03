@@ -2,8 +2,8 @@ const Pupil = require('../models/pupilModel');
 const School = require('../../auth/models/authModels/schoolModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const HttpError = require('../../utils/HttpError');
-const { errorWrapper } = require('../../utils/errorWrapper');
+const HttpError = require('../../../utils/HttpError');
+const { errorWrapper } = require('../../../utils/errorWrapper');
 
 // Реєстрація учня
 const registerPupil = errorWrapper(async (req, res, next) => {

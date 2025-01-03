@@ -1,13 +1,13 @@
 const express = require('express');
-const { verifyToken } = require('../middleware/authMiddleware');
 const { createDirector } = require('../controllers/userControllers');
+const { verifyToken } = require('../../utils/verifyTokenMiddleware');
 
-const userRoutes = express.Router();
+const userRouter = express.Router();
 
-userRoutes.post('/create-director', verifyToken, createDirector);
+userRouter.post('/create-director', verifyToken, createDirector);
 
 // userRoutes.post('/create-teacher', verifyToken, createTeacher);
 
 // userRoutes.post('/create-pupil', verifyToken, createPupil);
 
-module.exports = userRoutes;
+module.exports = userRouter;
